@@ -43,14 +43,14 @@ __Linear Models:__
 - Elastic Net with CV hyperparameter tuning
 
 __Tree-Based Models:__
-- Random Forest (n_estimators=100)
-- Gradient Boosting (n_estimators=100)
-- XGBoost (n_estimators=100)
-- LightGBM (n_estimators=100)
+- Random Forest (`n_estimators=100`)
+- Gradient Boosting (`n_estimators=100`)
+- XGBoost (`n_estimators=100`)
+- LightGBM (`n_estimators=100`)
 
 __Model Comparison with CV RMSE:__
 
-- ElasticNet: 0.1256
+- Elastic Net: 0.1256
 - Ridge Regression: 0.1289
 - Random Forest: 0.1312
 - Gradient Boosting: 0.1356

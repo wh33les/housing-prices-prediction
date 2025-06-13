@@ -1,1 +1,8 @@
 housing-prices-prediction.code-workspace
+data_exploration-old.py
+global_packages_backup.txt
+packages_to_remove.txt
+.venv/
+model_selection-old.py
+eda.py
+ms.py

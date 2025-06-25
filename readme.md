@@ -1,90 +1,152 @@
-# House Prices - Advanced Regression Techniques
+# Housing Prices Prediction
 
-Machine learning pipeline for predicting residential property sale prices using feature engineering and ensemble methods.
+[Kaggle competition to predict housing prices based on 79 features.](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview)  Submission achieved **top 2% performance** out of ~24,000 submissions.
 
-[Kaggle Competition](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques) | Python 3.13 | `scikit-learn` | `XGBoost`
+## Project Overview
 
-## Overview
+This project implements an end-to-end machine learning pipeline for house price prediction, featuring sophisticated data preprocessing, domain-knowledge-driven feature engineering, and comprehensive model evaluation across 8 different algorithms.
 
-This project implements a complete ML workflow for the Kaggle House Prices competition. The goal is to predict sale prices of homes in Ames, Iowa using 79 explanatory variables. 
+## Key Results
 
-__Final Result:__ Placed 458 out of 24,509 submissions (top 1.9%), with RMSE of 0.12203.
+- Top 2% Performance - Achieved excellent predictive accuracy
+- Comprehensive Model Comparison - Evaluated 8 different ML algorithms
+- Advanced Feature Engineering - Domain-based imputation and Box-Cox transformations
+- Robust Validation - 5-fold cross-validation for reliable performance estimates
 
-## Implementation
+## Tech Stack
 
-### (1) Data Exploration and Preprocessing
+- **Data Science & ML**: Python, Pandas, NumPy, Scikit-learn, XGBoost, LightGBM  
+- **Visualization**: Matplotlib
+- **Statistical Analysis**: SciPy  
+- **Development**: Jupyter Notebooks, Git
 
-__File:__ `01_house_prices_eda_and_preprocessing.ipynb`
+## Project Structure
 
-Started with exploratory data analysis of the 79 features. Key findings:
-- Target variable (`SalePrice`) is right-skewed, applied log transformation.
-- Missing values in 4 key features: `LotFrontage`, `MasVnrArea`, `BsmtQual`, `GarageYrBlt`.
-- 25+ numerical features were skewed, applied Box-Cox transformation.
-- Categorical features required ordinal encoding for quality ratings.
+```
+housing-prices-prediction/
+├── .vscode                                         # IDE preferences and formatting rules
+├── raw-data/                                       
+│   ├── train.csv                                   # Training dataset
+│   ├── test.csv                                    # Test dataset
+│   └── data_description.txt                        # Feature descriptions
+├── processed/
+│   ├── processed_train.csv                         # Cleaned training data
+│   └── processed_test.csv                          # Cleaned test data
+├── 01_house_prices_eda_and_preprocessing.ipynb     # Exploratory Data Analysis
+├── 02_house_prices_model_selection.ipynb           # Model Development & Evaluation
+├── submission.csv                                  # Final predictions
+└── requirements.txt                                # Dependencies
+```
 
-__Preprocessing pipeline:__
-- Missing value imputation using domain knowledge (no garage = 0 cars, no basement = 0 area).
-- Ordinal encoding for quality features (Poor=1, Excellent=5).
-- Box-Cox transformation for skewed numerical features.
-- One-hot encoding for categorical features.
-- Feature engineering: `TotalSF`, `TotalBathrooms`, `HouseAge`, `RemodAge`.
-- `RobustScaler` for feature scaling.
+## Installation & Setup
 
-### (2) Model Selection and Training
+Kaggle's data is already in the `raw-data` directory.  [You can also download it from the competition's data tab.](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data)
 
-__File:__ `02_house_prices_model_selection.ipynb`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/wh33les/housing-prices-prediction.git
+   cd housing-prices-prediction
+   ```
 
-Tested 8 different algorithms using 5-fold cross-validation:
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-__Linear Models:__
-- Linear Regression (baseline)
-- Ridge Regression (&alpha;=1.0)
-- Lasso Regression (&alpha;=0.001)
-- Elastic Net with CV hyperparameter tuning
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-__Tree-Based Models:__
-- Random Forest (`n_estimators=100`)
-- Gradient Boosting (`n_estimators=100`)
-- XGBoost (`n_estimators=100`)
-- LightGBM (`n_estimators=100`)
+4. **Run the analysis in Jupyter**
 
-__Model Comparison with CV RMSE:__
+   - Step 1: Data preprocessing and EDA
+   
+   01_house_prices_eda_and_preprocessing.ipynb
+   
+   - Step 2: Model training and evaluation
+   
+   02_house_prices_model_selection.ipynb
+   ```
 
-- Elastic Net: 0.1256
-- Ridge Regression: 0.1289
-- Random Forest: 0.1312
-- Gradient Boosting: 0.1356
-- XGBoost: 0.1378
-- LightGBM: 0.1394
-- Lasso Regression: 0.1402
-- Linear Regression: 0.1445
+## Methodology
 
-__Results:__ Elastic Net performed best with cross-validation RMSE of 0.1256. Key features were `OverallQual`, `GrLivArea`, `Functional`, `Neighborhood_StoneBr`, `TotalSF`.
+### 1. **Data Preprocessing & Feature Engineering**
 
-### (3) Model Implementation
+- Domain-Based Imputation: Leveraged real estate knowledge to handle missing values
+- Ordinal Encoding: Converted quality ratings to numerical scales
+- Logical Corrections: Applied business rules for feature consistency
+- Skewness Correction: Box-Cox transformations for 15+ highly skewed features
+- Feature Creation: Added `TotalSF`, `TotalBathrooms`, `HouseAge`, `RemodAge`
 
-The final model uses `ElasticNet` with the following configuration:
+### 2. **Model Development**
 
-- Used scaled features (204 features after one-hot encoding)
-- Log-transformed target variable
-- Cross-validated hyperparameters: `alphas=[0.0001, 0.001, 0.01, 0.1, 1, 10, 100]`, `l1_ratio=[0.1, 0.3, 0.5, 0.7, 0.9]`
-- 5-fold cross-validation for performance estimation
-- Coefficient analysis for feature importance
+- 8 Algorithm Comparison: Linear Regression, Ridge, Lasso, ElasticNet, Random Forest, Gradient Boosting, XGBoost, LightGBM
+- Robust Scaling: Applied to linear models for optimal performance
+- Target Transformation: Log transformation to normalize price distribution
+- Cross-Validation: 5-fold CV for unbiased performance estimation
 
-## Implementation Notes
+### 3. **Model Selection & Evaluation**
 
-The preprocessing pipeline handles the main data quality issues:
-- Domain-specific missing value imputation prevents information loss.
-- Box-Cox transformation addresses skewness in numerical features.
-- Proper train/test alignment for one-hot encoded features.
-- `RobustScaler` handles outliers better than `StandardScaler`.
+- Comprehensive Metrics: RMSE, MAE, R² across all models
+- Feature Importance Analysis: Identified key price predictors
+- Residual Analysis: Validated model assumptions
+- Final Ensemble: Selected best-performing algorithm based on CV scores
 
-Model selection revealed that regularized linear models outperform tree-based methods for this dataset. The `ElasticNet` regularization effectively handles the high-dimensional feature space after one-hot encoding. Feature scaling with `RobustScaler` was crucial for linear model performance.
+## Performance Metrics
 
-## Future Work
+1. Lasso CV
+- Cross-val RMSE: 0.1261 (+/- 0.0151)
+- Top 3 important features: TotalSF, OverallQual, Neighborhood_Crawfor
 
-- __Next:__ Experiment with neural networks and `PyTorch`
-- Polynomial features and feature interactions
-- Feature selection using recursive feature elimination
-- Ensemble methods (stacking multiple algorithms)
-- Different regularization approaches (Ridge with different alphas)
+2. ElasticNet CV
+- Cross-val RMSE: 0.1263 (+/- 0.0150)
+- Top 3 important features: TotalSF, OverallQual, Neighborhood_StoneBr
+
+3. Gradient Boosting
+- Cross-val RMSE: 0.1272 (+/- 0.0081)
+- Top 3 important features: TotalSF, OverallQual, TotalBathrooms
+
+## Visualizations
+
+The project includes comprehensive visualizations:
+
+- Feature Distributions
+- Correlation Analysis
+- Model Performance
+- Residual Analysis
+
+## Future Enhancements
+
+- Advanced Ensembles: Stacking and blending techniques  
+- Feature Selection* Recursive feature elimination
+- Deep Learning: Neural network architectures
+- Real-time Predictions: API deployment with Flask/FastAPI
+
+## Contact & Collaboration
+
+**Interested in data science collaboration or have questions about this project?**
+
+- **Email**: [ashleykwwarren@gmail.com]
+- **LinkedIn**: [Ashley K. W. Warren](https://www.linkedin.com/in/ashleykwwarren/)
+
+---
+
+## Keywords 
+
+**Machine Learning**: `Regression` `Ensemble Methods` `Cross-Validation` `Model Selection` `Hyperparameter Tuning` `Feature Engineering` `Predictive Modeling`
+
+**Algorithms**: `Linear Regression` `Ridge Regression` `Lasso Regression` `ElasticNet` `Random Forest` `Gradient Boosting` `XGBoost` `LightGBM`
+
+**Data Science**: `Exploratory Data Analysis` `Feature Scaling` `Data Preprocessing` `Missing Value Imputation` `Outlier Detection` `Statistical Analysis`
+
+**Statistical Methods**: `Box-Cox Transformation` `Log Transformation` `Skewness Correction` `Correlation Analysis` `Distribution Analysis`
+
+**Python Libraries**: `pandas` `numpy` `scikit-learn` `xgboost` `lightgbm` `matplotlib` `seaborn` `scipy`
+
+**Evaluation Metrics**: `RMSE` `MAE` `R-squared` `Cross-Validation Score` `Residual Analysis`
+
+**Domain Knowledge**: `Real Estate` `Housing Market` `Property Valuation` `Domain-Based Feature Engineering`
+
+**Software Engineering**: `Git Version Control` `Code Organization` `Reproducible Research` `Documentation` `Data Pipeline`
